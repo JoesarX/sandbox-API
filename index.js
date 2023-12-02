@@ -4,6 +4,7 @@ import cors from "cors";
 import nodemailer from "nodemailer";
 
 import categoryRouter from "./routes/category.js";
+import productRouter from "./routes/product.js";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -38,7 +39,8 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-    res.send("Hello this is the backend! HOSTED ON AZURE! AUTO DEPLOYED!");
+    res.send("Hello this is the backend! HOSTED ON AZURE! AUTO DEPLOYED MADE BY JOSUE!");
 });
 
 app.use("/category", categoryRouter(pool)); 
+app.use("/product", productRouter(pool));
