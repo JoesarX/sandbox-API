@@ -1,10 +1,11 @@
 import express from "express";
 import mysql from "mysql2/promise";
 import cors from "cors";
-import nodemailer from "nodemailer";
+//import nodemailer from "nodemailer";
 
 import categoryRouter from "./routes/category.js";
 import productRouter from "./routes/product.js";
+import ordersRouter from "./routes/orders.js";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -44,3 +45,8 @@ app.get("/", (req, res) => {
 
 app.use("/category", categoryRouter(pool)); 
 app.use("/product", productRouter(pool));
+app.use("/orders", ordersRouter(pool));
+
+setInterval(() => {
+    console.log("Ping to keep server active");
+}, 5*6000);
