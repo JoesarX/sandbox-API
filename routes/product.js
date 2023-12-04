@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 
 const productRouter = (pool) => {
-    //get all product
+    //* get all product
     router.get("/", async (req, res) => {
         try {
             const connection = await pool.getConnection();
@@ -17,34 +17,79 @@ const productRouter = (pool) => {
         }
     });
 
-    //Product Type:
-    // id: string;
-    // title: string;
-    // desc: string;
-    // img?: string;
-    // price: number;
-    // isFeatured: boolean;
-    // isVisible: boolean;
-    // catSlug: string;
-    // options?: { title: string; additionalPrice: number }[];
+    //* get featured and visible products
+    router.get("/featured", async (req, res) => {
+        try {
+            const connection = await pool.getConnection();
+            const sqlSelect = "SELECT * FROM product where isFeatured = 1 and isVisible = 1 Order by title ASC";
+            const [rows, fields] = await connection.query(sqlSelect);
+            connection.release();
+            console.log(`Get featured products ${req.params.id} Successfull`);
+            res.json(rows);
+        } catch (err) {
+            console.log("Get featured products Failed. Error: " + err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    });
+
+    //* get visible products
+    router.get("/visible", async (req, res) => {
+        try {
+            const connection = await pool.getConnection();
+            const sqlSelect = "SELECT * FROM product where isVisible = 1 Order by title ASC";
+            const [rows, fields] = await connection.query(sqlSelect);
+            connection.release();
+            console.log(`Get visible products ${req.params.id} Successfull`);
+            res.json(rows);
+        } catch (err) {
+            console.log("Get visible products Failed. Error: " + err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    });
+
+    //get one product
+    router.get("/:id", async (req, res) => {
+        try {
+            const connection = await pool.getConnection();
+            const sqlSelect = "SELECT * FROM product where id = '" + req.params.id + "'";
+            const [rows, fields] = await connection.query(sqlSelect);
+            connection.release();
+            console.log(`Get product ${req.params.id} Successfull`);
+            res.json(rows[0]);
+        } catch (err) {
+            console.log("Get all product Failed. Error: " + err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    });
+
 
     //Add a new product
     router.post("/", async (req, res) => {
         try {
             const connection = await pool.getConnection();
-            const q = "INSERT INTO `product` (`id`, `title`, `desc`, `img`, `price`, `isFeatured`, `isVisible`, `catSlug`) VALUES (?)";
+            const q = "INSERT INTO `product` (`id`, `title`, `desc`, `img`, `price`, `options`, `catSlug`) VALUES (?)";
                 console.log("req.body: ")
                 console.log(req.body);
+                const values = [
+                    req.body.id,
+                    req.body.title,
+                    req.body.desc,
+                    req.body.img,
+                    req.body.price,
+                    JSON.stringify(req.body.options),
+                    req.body.catSlug
+                ];
 
-            await connection.query(q, req.body[0]);
+            await connection.query(q, [values]);
             connection.release();
             console.log("Post product Successfull");
-            res.json("Categoria añadida exitosamente!");
+            res.status(200).json({ message: "Producto añadido exitosamente!" });
         } catch (err) {
             console.log("Post product Failed. Error: " + err);
             res.status(500).json({ error: "Internal Server Error" });
         }
     });
+
     //delete product
     router.delete("/:id", async (req, res) => {
         try {
@@ -53,9 +98,58 @@ const productRouter = (pool) => {
             const [rows, fields] = await connection.query(sqlSelect);
             connection.release();
             console.log("Delete product " + req.params.id + " Successfull");
-            res.json(rows);
+            res.status(200).json({ message: "Producto Eliminado exitosamente" });
         } catch (err) {
             console.log("Delete product " + req.params.id + " Failed. Error: " + err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    });
+
+    //* edit product isFeatured
+    router.put("/featured/:id", async (req, res) => {
+        try {
+            const connection = await pool.getConnection();
+            const { id } = req.params;
+            const {
+                isFeatured
+            } = req.body;
+            const q =
+                "UPDATE product SET isFeatured = ? WHERE id = ?";
+            const values = [
+                isFeatured,
+                id
+            ];
+
+            await connection.query(q, values);
+            connection.release();
+            console.log(`Update isFeatured product ${req.params.id} Successfull`)
+            res.status(200).json({ message: "Producto Editado exitosamente" });
+        } catch (err) {
+            console.log(`Update isFeatured product ${req.params.id} Failed. Error: ` + err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    });
+
+    //* edit product isFeatured
+    router.put("/visible/:id", async (req, res) => {
+        try {
+            const connection = await pool.getConnection();
+            const { id } = req.params;
+            const {
+                isVisible
+            } = req.body;
+            const q =
+                "UPDATE product SET isVisible = ? WHERE id = ?";
+            const values = [
+                isVisible,
+                id
+            ];
+            await connection.query(q, values);
+            connection.release();
+            console.log(`Update isFeatured product ${req.params.id} Successfull`)
+            res.status(200).json({ message: "Producto Editado exitosamente" });
+        } catch (err) {
+            console.log(`Update isVisible product ${req.params.id} Failed. Error: ` + err);
             res.status(500).json({ error: "Internal Server Error" });
         }
     });
@@ -65,34 +159,41 @@ const productRouter = (pool) => {
         try {
             const connection = await pool.getConnection();
             const { id } = req.params;
-            // console.log(id);
             const {
-                editedValue
+                title,
+                desc,
+                img,
+                price,
+                isFeatured,
+                isVisible,
+                options,
+                catSlug
             } = req.body;
             const q =
-                "UPDATE product SET Nombre_Categoria = ? WHERE ID = ?";
-
-            console.log(req.body[1] + " " + req.body[0]);
-            // console.log(req);
+                "UPDATE product SET title = ?, `desc` = ?, img = ?, price = ?, isFeatured = ?, isVisible = ?, options = ?, catSlug = ? WHERE id = ?";
             const values = [
-                req.body[0],
-                req.body[1]
-
+                title,
+                desc,
+                img,
+                price,
+                isFeatured,
+                isVisible,
+                JSON.stringify(options),
+                catSlug,
+                id
             ];
 
-            /* console.log(values);
-             console.log(values[0]);
-             console.log(values[1]);*/
             await connection.query(q, values);
             connection.release();
-            console.log(`Put product ${id} Successfull`);
-            res.json("Categoría actualizado exitosamente!");
-
+            console.log(`Update product ${req.params.id} Successfull`)
+            res.status(200).json({ message: "Producto Editado exitosamente" });
         } catch (err) {
-            console.log(`Put product ${id} Failed. Error: ` + err);
+            console.log(`Update product ${req.params.id} Failed. Error: ` + err);
             res.status(500).json({ error: "Internal Server Error" });
         }
     });
+
+    
 
     return router;
 };
