@@ -17,6 +17,21 @@ const productRouter = (pool) => {
         }
     });
 
+    //* get products by category
+    router.get("/menu/:category", async (req, res) => {
+        try {
+            const connection = await pool.getConnection();
+            const sqlSelect = `SELECT * FROM product where isVisible = 1 and catSlug = '${req.params.category}' Order by title ASC`;
+            const [rows, fields] = await connection.query(sqlSelect);
+            connection.release();
+            console.log(`Get featured products ${req.params.id} Successfull`);
+            res.json(rows);
+        } catch (err) {
+            console.log("Get featured products Failed. Error: " + err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    });
+
     //* get featured and visible products
     router.get("/featured", async (req, res) => {
         try {

@@ -24,7 +24,7 @@ const categoryRouter = (pool) => {
             const session = req.session;
             console.log(session);
             const connection = await pool.getConnection();
-            const sqlSelect = "SELECT * FROM category ";
+            const sqlSelect = "SELECT * FROM category ORDER BY FIELD(title, 'Comida', 'Bebida', 'Otros')";
             const [rows, fields] = await connection.query(sqlSelect);
             connection.release();
             console.log("Get all category Successfull");

@@ -49,4 +49,4 @@ app.use("/orders", ordersRouter(pool));
 
 setInterval(() => {
     console.log("Ping to keep server active");
-}, 5*6000);
+}, 4*60000);
