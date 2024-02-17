@@ -58,13 +58,14 @@ const datosclimaRouter = (pool) => {
             // // Extract temperature from the query parameters
             // const temperature = req.query.temp;
 
-            const q = "INSERT INTO `datosclima` (`idArduino`,`temperatura`,`humedad`,`lluvia`) VALUES (?)";
+            const q = "INSERT INTO `datosclima` (`idArduino`,`temperatura`,`humedad`,`lluvia`,`brillo`) VALUES (?)";
 
             const values = [
                 req.query.idArduino,
                 req.query.temperatura,
                 req.query.humedad,
-                req.query.lluvia
+                req.query.lluvia,
+                req.query.brillo
             ];
 
             await connection.query(q, [values]);
