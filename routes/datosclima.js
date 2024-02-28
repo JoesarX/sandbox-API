@@ -2,9 +2,11 @@ import express from "express";
 const router = express.Router();
 
 const datosclimaRouter = (pool) => {
+    console.log("datosclimaRouter");
     //* get all datosclima
     router.get("/", async (req, res) => {
         try {
+            console.log("Get all datosclima");
             const connection = await pool.getConnection();
             const sqlSelect = "SELECT * FROM datosclima";
             const [rows, fields] = await connection.query(sqlSelect);
