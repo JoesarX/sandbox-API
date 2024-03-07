@@ -8,28 +8,27 @@ import Snow from '../../assets/images/snow.jpg'
 import Stormy from '../../assets/images/Stormy.jpg'
 import Sunny from '../../assets/images/Sunny.jpg'
 
-const Background = () => {
+const Background = ({iconString}) => {
 
   const [image, setImage] = useState(Clear)
 
- {/* useEffect(() => {
-    if (weather.conditions) {
-      let imageString = weather.conditions
-      if (imageString.toLowerCase().includes('clear')) {
-        setImage(Clear)
-      } else if (imageString.toLowerCase().includes('cloud')) {
+  useEffect(() => {
+    if (iconString) {
+      if (iconString.toLowerCase().includes('sunny')) {
+        setImage(Sunny)
+      } else if (iconString.toLowerCase().includes('clouded')) {
         setImage(Cloudy)
-      } else if (imageString.toLowerCase().includes('rain') || imageString.toLowerCase().includes('shower')) {
+      } else if (iconString.toLowerCase().includes('rainy') || iconString.toLowerCase().includes('shower')) {
         setImage(Rainy)
-      } else if (imageString.toLowerCase().includes('snow')) {
+      } else if (iconString.toLowerCase().includes('snow')) {
         setImage(Snow)
-      } else if (imageString.toLowerCase().includes('fog')) {
+      } else if (iconString.toLowerCase().includes('fog')) {
         setImage(Fog)
-      } else if (imageString.toLowerCase().includes('thunder') || imageString.toLowerCase().includes('storm')) {
+      } else if (iconString.toLowerCase().includes('thunder') || iconString.toLowerCase().includes('storm')) {
         setImage(Stormy)
       }
     }
-  }, [weather])*/}
+  }, [iconString])
 
   return (
     <img src={image} alt="weather_image" className='h-screen w-full fixed left-0 top-0 -z-[10]' />

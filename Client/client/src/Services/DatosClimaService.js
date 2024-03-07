@@ -1,10 +1,10 @@
 import axios from 'axios';
-const API_URL = 'https://los-toneles.azurewebsites.net';
-
+//const API_URL = 'https://los-toneles.azurewebsites.net';
+const API_URL = 'http://localhost:8000';
 export const getAllData = async () => {
     console.log("helloService")
     try {
-        const res = await axios.get(`${API_URL}/datosclima/latest`);
+        const res = await axios.get(`${API_URL}/datosclima/average/`);
         return res.data;
     } catch (error) {
         

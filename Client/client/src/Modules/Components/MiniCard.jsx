@@ -13,11 +13,14 @@ const MiniCard = ({ time, temp, iconString }) => {
 
   useEffect(() => {
     if (iconString) {
-      if (iconString.toLowerCase().includes('cloud')) {
+      if (iconString.toLowerCase().includes('clouded')) {
+   
         setIcon(cloud)
-      } else if (iconString.toLowerCase().includes('rain')) {
+      } else if (iconString.toLowerCase().includes('rainy')) {
+      
         setIcon(rain)
-      } else if (iconString.toLowerCase().includes('clear')) {
+      } else if (iconString.toLowerCase().includes('sunny')) {
+    
         setIcon(sun)
       } else if (iconString.toLowerCase().includes('thunder')) {
         setIcon(storm)
@@ -33,7 +36,7 @@ const MiniCard = ({ time, temp, iconString }) => {
   return (
     <div className='glassCard w-[10rem] h-[10rem] p-4 flex flex-col'>
       <p className='text-center'>
-        {new Date(time).toLocaleTimeString('en', { weekday: 'long' }).split(" ")[0]}
+        {time}
       </p>
       <hr />
       <div className='w-full flex justify-center items-center flex-1'>
