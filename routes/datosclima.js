@@ -41,7 +41,7 @@ const datosclimaRouter = (pool) => {
             const connection = await pool.getConnection();
             const sqlSelect = `
                 SELECT 
-                    DAYNAME(horaTomada) as dia, 
+                    DAYNAME(CONVERT_TZ(horaTomada, '+00:00', '-06:00')) as dia, 
                     AVG(temperatura) as temperatura, 
                     AVG(humedad) as humedad, 
                     AVG(lluvia) as lluvia, 
@@ -49,7 +49,7 @@ const datosclimaRouter = (pool) => {
                 FROM 
                     datosclima
                 WHERE 
-                    horaTomada >= CURDATE() - INTERVAL 7 DAY
+                    horaTomada >= DATE_SUB(CONVERT_TZ(NOW(), '+00:00', '-06:00'), INTERVAL 7 DAY)
                 GROUP BY 
                     dia;
             `;
@@ -62,6 +62,7 @@ const datosclimaRouter = (pool) => {
             res.status(500).json({ error: "Internal Server Error" });
         }
     });
+    
     
 
     //* get one datosclima
