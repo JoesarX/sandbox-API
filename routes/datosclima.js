@@ -19,7 +19,7 @@ const datosclimaRouter = (pool) => {
         }
     });
 
-    //* get all datosclima
+    //* get latest values datosclima
     router.get("/latest/", async (req, res) => {
         try {
             const connection = await pool.getConnection();
@@ -37,6 +37,35 @@ const datosclimaRouter = (pool) => {
             res.status(500).json({ error: "Internal Server Error" });
         }
     });
+
+    router.get("/average/", async (req, res) => {
+        try {
+            const connection = await pool.getConnection();
+            const sqlSelect = `
+                SELECT 
+                    DAYNAME(CONVERT_TZ(horaTomada, '+00:00', '-06:00')) as dia, 
+                    AVG(temperatura) as temperatura, 
+                    AVG(humedad) as humedad, 
+                    AVG(lluvia) as lluvia, 
+                    AVG(brillo) as brillo
+                FROM 
+                    datosclima
+                WHERE 
+                    horaTomada >= DATE_SUB(CONVERT_TZ(NOW(), '+00:00', '-06:00'), INTERVAL 7 DAY)
+                GROUP BY 
+                    dia;
+            `;
+            const [rows, fields] = await connection.query(sqlSelect);
+            connection.release();
+            console.log("Get all datosclima Successful");
+            res.json(rows);
+        } catch (err) {
+            console.log("Get all datosclima Failed. Error: " + err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    });
+    
+    
 
     //* get one datosclima
     router.get("/:id", async (req, res) => {
