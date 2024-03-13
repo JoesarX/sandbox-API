@@ -38,7 +38,13 @@ const pool = mysql.createPool({
 });
 
 app.use(express.json());
-app.use(cors());
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+};
+
+app.use(cors(corsOptions));
+
 
 app.get("/", (req, res) => {
     res.send("Hello this is the backend! HOSTED ON AZURE! AUTO DEPLOYED MADE BY JOSUE!");
