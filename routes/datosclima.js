@@ -2,9 +2,11 @@ import express from "express";
 const router = express.Router();
 
 const datosclimaRouter = (pool) => {
+    console.log("datosclimaRouter");
     //* get all datosclima
     router.get("/", async (req, res) => {
         try {
+            console.log("Get all datosclima");
             const connection = await pool.getConnection();
             const sqlSelect = "SELECT * FROM datosclima";
             const [rows, fields] = await connection.query(sqlSelect);
@@ -37,15 +39,17 @@ const datosclimaRouter = (pool) => {
     });
 
     router.get("/average/", async (req, res) => {
+        console.log("deaaa");
         try {
             const connection = await pool.getConnection();
             const sqlSelect = `
                 SELECT 
-                    DAYNAME(CONVERT_TZ(horaTomada, '+00:00', '-06:00')) as dia, 
-                    AVG(temperatura) as temperatura, 
-                    AVG(humedad) as humedad, 
-                    AVG(lluvia) as lluvia, 
-                    AVG(brillo) as brillo
+                id as id,
+                DAYNAME(CONVERT_TZ(horaTomada, '+00:00', '-06:00')) as dia, 
+                FORMAT(AVG(temperatura), 1) as temperatura, 
+                FORMAT(AVG(humedad), 1) as humedad, 
+                FORMAT(AVG(lluvia), 1) as lluvia, 
+                AVG(brillo) as brillo
                 FROM 
                     datosclima
                 WHERE 
@@ -57,16 +61,15 @@ const datosclimaRouter = (pool) => {
             `;
             const [rows, fields] = await connection.query(sqlSelect);
             connection.release();
-            console.log("Get all datosclima Successful");
+            console.log("Get allll datosclima Successful");
+            console.log(":)");
+            console.log(rows);
             res.json(rows);
         } catch (err) {
             console.log("Get all datosclima Failed. Error: " + err);
             res.status(500).json({ error: "Internal Server Error" });
         }
     });
-    
-    
-    
 
     //* get one datosclima
     router.get("/:id", async (req, res) => {
@@ -87,23 +90,22 @@ const datosclimaRouter = (pool) => {
         try {
             const connection = await pool.getConnection();
 
-            // // Extract temperature from the query parameters
-            // const temperature = req.query.temp;
-
-            const q = "INSERT INTO `datosclima` (`idArduino`,`temperatura`,`humedad`,`lluvia`,`brillo`) VALUES (?)";
+            const q = "INSERT INTO `datosclima` (`horaTomada`,`idArduino`,`temperatura`,`humedad`,`lluvia`,`brillo`) VALUES (?)";
 
             const values = [
-                req.query.idArduino,
-                req.query.temperatura,
-                req.query.humedad,
-                req.query.lluvia,
-                req.query.brillo
+                req.body.horaTomada,
+                req.body.idArduino,
+                req.body.temperatura,
+                req.body.humedad,
+                req.body.lluvia,
+                req.body.brillo
             ];
+            console.log(values)
 
             await connection.query(q, [values]);
             connection.release();
             console.log("Post datosclima Successfull");
-            res.status(200).json({ message: "temperatura añadida exitosamente!" });
+            res.status(200).json({ message: "temperaturaA añadida exitosamente!" });
         } catch (err) {
             console.log("Post datosclima Failed. Error: " + err);
             res.status(500).json({ error: "Internal Server Error" });
