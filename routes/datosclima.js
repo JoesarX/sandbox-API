@@ -44,11 +44,12 @@ const datosclimaRouter = (pool) => {
             const connection = await pool.getConnection();
             const sqlSelect = `
                 SELECT 
+                id as id,
                 DAYNAME(CONVERT_TZ(horaTomada, '+00:00', '-06:00')) as dia, 
                 FORMAT(AVG(temperatura), 1) as temperatura, 
                 FORMAT(AVG(humedad), 1) as humedad, 
                 FORMAT(AVG(lluvia), 1) as lluvia, 
-                FORMAT(AVG(brillo), 1) as brillo
+                AVG(brillo) as brillo
                 FROM 
                     datosclima
                 WHERE 
@@ -61,7 +62,8 @@ const datosclimaRouter = (pool) => {
             const [rows, fields] = await connection.query(sqlSelect);
             connection.release();
             console.log("Get allll datosclima Successful");
-            console.log([rows]);
+            console.log(":)");
+            console.log(rows);
             res.json(rows);
         } catch (err) {
             console.log("Get all datosclima Failed. Error: " + err);

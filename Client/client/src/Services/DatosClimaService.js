@@ -1,5 +1,5 @@
 import axios from 'axios';
-//const API_URL = 'https://los-toneles.azurewebsites.net';
+//const API_URL = 'http://joesar.azurewebsites.net';
 const API_URL = 'http://localhost:8000';
 export const getAllData = async () => {
     console.log("helloService")
