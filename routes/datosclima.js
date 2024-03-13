@@ -54,7 +54,9 @@ const datosclimaRouter = (pool) => {
                 WHERE 
                     horaTomada >= DATE_SUB(CONVERT_TZ(NOW(), '+00:00', '-06:00'), INTERVAL 7 DAY)
                 GROUP BY 
-                    dia;
+                    dia
+                ORDER BY
+                    horaTomada DESC;
             `;
             const [rows, fields] = await connection.query(sqlSelect);
             connection.release();
@@ -66,8 +68,6 @@ const datosclimaRouter = (pool) => {
             res.status(500).json({ error: "Internal Server Error" });
         }
     });
-
-
 
     //* get one datosclima
     router.get("/:id", async (req, res) => {
