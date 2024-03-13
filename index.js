@@ -9,7 +9,7 @@ import ordersRouter from "./routes/orders.js";
 import datosclimaRouter from "./routes/datosclima.js";
 
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}!`);
