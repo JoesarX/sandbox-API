@@ -90,22 +90,23 @@ const datosclimaRouter = (pool) => {
         try {
             const connection = await pool.getConnection();
 
-            const q = "INSERT INTO `datosclima` (`horaTomada`,`idArduino`,`temperatura`,`humedad`,`lluvia`,`brillo`) VALUES (?)";
+            // // Extract temperature from the query parameters
+            // const temperature = req.query.temp;
+
+            const q = "INSERT INTO `datosclima` (`idArduino`,`temperatura`,`humedad`,`lluvia`,`brillo`) VALUES (?)";
 
             const values = [
-                req.body.horaTomada,
-                req.body.idArduino,
-                req.body.temperatura,
-                req.body.humedad,
-                req.body.lluvia,
-                req.body.brillo
+                req.query.idArduino,
+                req.query.temperatura,
+                req.query.humedad,
+                req.query.lluvia,
+                req.query.brillo
             ];
-            console.log(values)
 
             await connection.query(q, [values]);
             connection.release();
             console.log("Post datosclima Successfull");
-            res.status(200).json({ message: "temperaturaA añadida exitosamente!" });
+            res.status(200).json({ message: "temperatura añadida exitosamente!" });
         } catch (err) {
             console.log("Post datosclima Failed. Error: " + err);
             res.status(500).json({ error: "Internal Server Error" });
