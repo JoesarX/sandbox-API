@@ -23,20 +23,17 @@ const datosclimaRouter = (pool) => {
     router.get("/latest/", async (req, res) => {
         try {
             const connection = await pool.getConnection();
-            const sqlSelect = `SELECT t1.*
-                    FROM  datosclima t1
-                    LEFT JOIN  datosclima t2
-                        ON t1.idArduino = t2.idArduino AND t1.horaTomada < t2.horaTomada
-                    WHERE t2.id IS NULL;`;
+            const sqlSelect = `SELECT * FROM datosclima ORDER BY horaTomada DESC LIMIT 1`;
             const [rows, fields] = await connection.query(sqlSelect);
             connection.release();
-            console.log("Get all datosclima Successfull");
-            res.json(rows);
+            console.log("Get latest datosclima Successfull");
+            res.json(rows[0]); // Return the first (and only) row directl
         } catch (err) {
-            console.log("Get all datosclima Failed. Error: " + err);
+            console.log("Get latest datosclima Failed. Error: " + err);
             res.status(500).json({ error: "Internal Server Error" });
         }
     });
+    
 
     router.get("/average/", async (req, res) => {
         console.log("deaaa");
