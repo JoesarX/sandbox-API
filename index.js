@@ -3,9 +3,9 @@ import mysql from "mysql2/promise";
 import cors from "cors";
 //import nodemailer from "nodemailer";
 
-import categoryRouter from "./routes/category.js";
-import productRouter from "./routes/product.js";
-import ordersRouter from "./routes/orders.js";
+// import categoryRouter from "./routes/category.js";
+// import productRouter from "./routes/product.js";
+// import ordersRouter from "./routes/orders.js";
 import datosclimaRouter from "./routes/datosclima.js";
 
 const app = express();
@@ -45,11 +45,11 @@ app.get("/", (req, res) => {
     res.send("Hello this is the backend! HOSTED ON AZURE! AUTO DEPLOYED MADE BY JOSUE!");
 });
 
-app.use("/category", categoryRouter(pool)); 
-app.use("/product", productRouter(pool));
-app.use("/orders", ordersRouter(pool));
+//app.use("/category", categoryRouter(pool)); 
+//app.use("/product", productRouter(pool));
+//app.use("/orders", ordersRouter(pool));
 app.use("/datosclima", datosclimaRouter(pool));
 
-setInterval(() => {
-    console.log("Ping to keep server active");
-}, 4*60000);
+// setInterval(() => {
+//     console.log("Ping to keep server active");
+// }, 4*60000);
