@@ -7,6 +7,7 @@ import cors from "cors";
 // import productRouter from "./routes/product.js";
 // import ordersRouter from "./routes/orders.js";
 import datosclimaRouter from "./routes/datosclima.js";
+import datosSC from "./routes/sc.js";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -49,6 +50,7 @@ app.get("/", (req, res) => {
 //app.use("/product", productRouter(pool));
 //app.use("/orders", ordersRouter(pool));
 app.use("/datosclima", datosclimaRouter(pool));
+//app.use("/datosSC", datosSC(pool));
 
 // setInterval(() => {
 //     console.log("Ping to keep server active");
