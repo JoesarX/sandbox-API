@@ -5,7 +5,7 @@ const datosclimaRouter = (pool) => {
     console.log("datosclimaRouter");
     //* get all datosclima
     router.get("/", async (req, res) => {
-        res.send('Hello, Secure World!');
+        res.json('Hello, this is the datosclima endpoint!');
     });
 
     //* get latest values datosclima
