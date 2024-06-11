@@ -6,7 +6,7 @@ import cors from "cors";
 // import categoryRouter from "./routes/category.js";
 // import productRouter from "./routes/product.js";
 // import ordersRouter from "./routes/orders.js";
-import datosclimaRouter from "./routes/datosclima.js";
+//import datosclimaRouter from "./routes/datosclima.js";
 import datosSC from "./routes/sc.js";
 
 const app = express();
@@ -49,8 +49,8 @@ app.get("/", (req, res) => {
 //app.use("/category", categoryRouter(pool)); 
 //app.use("/product", productRouter(pool));
 //app.use("/orders", ordersRouter(pool));
-app.use("/datosclima", datosclimaRouter(pool));
-//app.use("/datosSC", datosSC(pool));
+//app.use("/datosclima", datosclimaRouter(pool));
+app.use("/datosSC", datosSC(pool));
 
 // setInterval(() => {
 //     console.log("Ping to keep server active");
